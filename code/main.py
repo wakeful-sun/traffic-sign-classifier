@@ -1,48 +1,15 @@
-import pickle
-import csv
 import tensorflow as tf
-from sklearn.utils import shuffle
 from nn_model_factory import *
 from time_tracker import *
 from input_normalizer import *
+from traffic_signs_data import TrafficSignsData
 
 
-training_file = "../../traffic-signs-data/train.p"
-validation_file = "../../traffic-signs-data/valid.p"
-testing_file = "../../traffic-signs-data/test.p"
-
-sign_names_file = "../../CarND-Traffic-Sign-Classifier-Project/signnames.csv"
-
-with open(training_file, mode='rb') as f:
-    train = pickle.load(f)
-with open(validation_file, mode='rb') as f:
-    valid = pickle.load(f)
-with open(testing_file, mode='rb') as f:
-    test = pickle.load(f)
-with open(sign_names_file) as f:
-    s_names_dict = {}
-    readCSV = csv.reader(f, delimiter=",")
-    for index, row in enumerate(readCSV):
-        if(index > 0):
-            s_names_dict[int(row[0])] = row[1]
-
-X_train, y_train = train['features'], train['labels']
-X_valid, y_valid = valid['features'], valid['labels']
-X_test, y_test = test['features'], test['labels']
-
-n_train = len(X_train)
-n_validation = len(X_valid)
-n_test = len(X_test)
-image_shape = "{0[1]}x{0[2]}".format(X_train.shape)
-n_classes = len(set(y_train))
-
-print("Number of training examples =", n_train)
-print("Number of testing examples =", n_test)
-print("Image data shape =", image_shape)
-print("Number of classes =", n_classes)
+data = TrafficSignsData()
+data.print_info()
 
 input_normalizer = InputNormalizer()
-n_labels, n_data = input_normalizer.normalize_by_amount(y_train, X_train)
+n_labels, n_data = data.train.apply_map(input_normalizer.normalize_by_amount)
 # n_labels, n_data = y_train, X_train
 
 session = tf.InteractiveSession()
@@ -117,7 +84,8 @@ index = 0
 
 for epoch in range(EPOCHS):
     print("Epoch: ", epoch)
-    n_labels, n_data = shuffle(y_train, X_train)
+    data.train.shaffle()
+    n_labels, n_data = data.train.labels, data.train.features
     #n_labels, n_data = shuffle(n_labels, n_data)
     #n_labels, n_data = input_normalizer.normalize_by_amount(y_train, X_train)
 
