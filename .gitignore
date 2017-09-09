@@ -1,0 +1,14 @@
+#VS Code files
+\.vscode
+
+#PyCharm files
+\.idea
+
+#jupyter notebook files
+\.ipynb_checkpoints
+
+#python bytecode files
+\__pycache__
+
+#tensorboard files and tained networks
+\tb_logs
