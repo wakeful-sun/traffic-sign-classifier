@@ -20,7 +20,7 @@ class InputNormalizer:
         shuffled_df = self._shuffle(df)
 
         df_categories = shuffled_df.groupby(["category"])
-        min_category_amount = int(df_categories.count().min())
+        min_category_amount = 500 #int(df_categories.count().min())
 
         amount_normalized_categories = list()
 

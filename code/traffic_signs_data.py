@@ -63,7 +63,7 @@ class DataSet:
         self._f = features
         self._l = labels
         self.offset = 0
-        self.current_batch = []
+        self.current_batch = [], []
 
     @property
     def length(self):
@@ -90,8 +90,8 @@ class DataSet:
         self.reset()
 
     def move_next(self, batch_size):
-        batch = self._l[self.offset:self.offset + batch_size], self._f[self.offset:self.offset + batch_size]
-        if len(batch[0]) > 0:
+        self.current_batch = self._l[self.offset:self.offset+batch_size], self._f[self.offset:self.offset+batch_size]
+        if len(self.current_batch[0]) > 0:
             self.offset = self.offset + batch_size
             return True
         else:
@@ -99,5 +99,5 @@ class DataSet:
             return False
 
     def reset(self):
-        self.current_batch = []
+        self.current_batch = [], []
         self.offset = 0
