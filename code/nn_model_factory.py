@@ -21,11 +21,11 @@ class NnModelFactory:
     def _max_pool_2x2(x):
         return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding="VALID", name="max_pool")
 
-    def create(self, x, tf_keep_prob):
+    def create(self, input_tensor, keep_prob_tensor, n_classes):
         with tf.name_scope("conv1"):
             w_conv1 = self._weight_variable([5, 5, 3, 15])
             b_conv1 = self._bias_variable([15])
-            conv1_wx_b = self._conv2d(x, w_conv1) + b_conv1
+            conv1_wx_b = self._conv2d(input_tensor, w_conv1) + b_conv1
 
             conv1 = tf.nn.relu(conv1_wx_b, name="relu")
             # Convolution output is 28x28x15
@@ -50,12 +50,12 @@ class NnModelFactory:
             fc1 = tf.nn.relu(tf.matmul(pool2_flat, w_fc1) + b_fc1, name="relu")
 
         # dropout
-        fc1_drop = tf.nn.dropout(fc1, keep_prob=tf_keep_prob, name="dropout")
+        fc1_drop = tf.nn.dropout(fc1, keep_prob=keep_prob_tensor, name="dropout")
 
         # readout
         with tf.name_scope("read_out"):
-            w_fc2 = self._weight_variable([600, 42])
-            b_fc2 = self._bias_variable([42])
+            w_fc2 = self._weight_variable([600, n_classes])
+            b_fc2 = self._bias_variable([n_classes])
 
         # model
         return tf.add(tf.matmul(fc1_drop, w_fc2), b_fc2, name="model")

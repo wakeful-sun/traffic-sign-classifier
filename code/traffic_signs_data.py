@@ -62,6 +62,7 @@ class DataSet:
 
         self._f = features
         self._l = labels
+        self._classes = len(set(self._l))
         self.offset = 0
         self.current_batch = [], []
 
@@ -76,6 +77,10 @@ class DataSet:
     @property
     def labels(self):
         return self._l
+
+    @property
+    def n_classes(self):
+        return self._classes
 
     @property
     def current(self):
