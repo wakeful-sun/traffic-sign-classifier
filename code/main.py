@@ -1,22 +1,21 @@
 import tensorflow as tf
 import time
 from nn_model_factory import *
-from time_tracker import *
 from traffic_signs_data import TrafficSignsData
 from nn_model_trainer import NnModelTrainer
 
 
 learning_rate = 1e-4
-EPOCHS = 66
+EPOCHS = 90
 BATCH_SIZE = 200
-drop = 0.17
+drop = 0.3
 tb_log_path = "../tb_logs/E{}_B{}_R{}_D{}_all-data/".format(EPOCHS, BATCH_SIZE, learning_rate, drop)
 model_path = tb_log_path + "model.ckpt"
 
 data = TrafficSignsData()
 data.print_info()
 
-trainer = NnModelTrainer((32, 32, 3), data.train.n_classes)
+trainer = NnModelTrainer([32, 32, 3], data.train.n_classes, learning_rate)
 
 tf.summary.scalar("cross_entropy_scl", trainer.cross_entropy)
 tf.summary.scalar("training_accuracy", trainer.accuracy)
@@ -65,10 +64,18 @@ with tf.Session() as session:
             index += len(images_batch)
             tb_writer.add_summary(summary, index)
 
-    validation_accuracy = evaluate_accuracy(data.validation)
-    print("*** final validation accuracy {:.3f}".format(validation_accuracy * 100))
+    final_accuracy = evaluate_accuracy(data.validation)
 
     saver.save(session, model_path)
 
-elapsed = time.time() - start_time
-print("Total training time for {} batches: {:.2f}".format(data.train.length * EPOCHS, elapsed))
+elapsed = (time.time() - start_time)/60
+final_accuracy_msg = "*** final validation accuracy {:.3f}".format(final_accuracy * 100)
+spent_time_msg = "Total training time for {} samples: {:.2f}m".format(data.train.length * EPOCHS, elapsed)
+
+with open("{}_summary_{:.3f}.txt".format(tb_log_path, final_accuracy * 100), "w") as f:
+    f.write(final_accuracy_msg)
+    f.write("\n")
+    f.write(spent_time_msg)
+
+print(final_accuracy_msg)
+print(spent_time_msg)

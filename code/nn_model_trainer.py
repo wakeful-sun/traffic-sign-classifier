@@ -47,9 +47,8 @@ class NnModelTrainer:
 class Placeholders:
 
     def __init__(self, im_shape):
-        t_images_shape = [None]
-        t_images_shape.extend(im_shape)
-        self.t_images = tf.placeholder(tf.uint8, t_images_shape, name="input_images")
+        im_shape.insert(0, None)
+        self.t_images = tf.placeholder(tf.uint8, im_shape, name="input_images")
         self.t_labels = tf.placeholder(tf.int32, (None,), name="input_labels")
         self.t_keep_prob = tf.placeholder(tf.float32, name="keep_prob")
 
@@ -59,7 +58,7 @@ class Placeholders:
 
     @property
     def images_tensor(self):
-        return self.t_labels
+        return self.t_images
 
     @property
     def keep_prob_tensor(self):
