@@ -17,8 +17,8 @@ class NnModelTrainer:
         logits = NnModelFactory().create(t_preprocessed_images, self.input.keep_prob_tensor, n_classes)
 
         with tf.name_scope("cross_entropy"):
-            softmax = tf.nn.softmax_cross_entropy_with_logits(labels=t_one_hot_labels, logits=logits)
-            self.t_cross_entropy = tf.reduce_mean(softmax)
+            self.t_softmax = tf.nn.softmax_cross_entropy_with_logits(labels=t_one_hot_labels, logits=logits)
+            self.t_cross_entropy = tf.reduce_mean(self.t_softmax)
 
         with tf.name_scope("accuracy"):
             prediction_is_correct = tf.equal(tf.argmax(logits, 1), tf.argmax(t_one_hot_labels, 1))
@@ -42,6 +42,10 @@ class NnModelTrainer:
     @property
     def cross_entropy(self):
         return self.t_cross_entropy
+
+    @property
+    def softmax(self):
+        return self.t_softmax
 
 
 class Placeholders:
