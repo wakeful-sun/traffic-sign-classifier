@@ -79,3 +79,4 @@ with open("{}_summary_{:.3f}.txt".format(tb_log_path, final_accuracy * 100), "w"
 
 print(final_accuracy_msg)
 print(spent_time_msg)
+print("Location is: ", tb_log_path)
