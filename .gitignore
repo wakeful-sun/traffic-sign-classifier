@@ -12,3 +12,5 @@
 
 #tensorboard files and tained networks
 \tb_logs
+checkpoint
+*.ckpt.*

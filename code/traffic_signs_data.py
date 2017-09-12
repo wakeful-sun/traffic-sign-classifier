@@ -18,16 +18,11 @@ class TrafficSignsData:
             valid = pickle.load(f)
         with open(testing_file, mode='rb') as f:
             test = pickle.load(f)
-        with open(sign_names_file) as f:
-            self.s_names_dict = {}
-            read_csv = csv.reader(f, delimiter=",")
-            for index, row in enumerate(read_csv):
-                if index > 0:
-                    self.s_names_dict[int(row[0])] = row[1]
 
         self.train_data_set = DataSet(train['labels'], train['features'])
         self.valid_data_set = DataSet(valid['labels'], valid['features'])
         self.test_data_set = DataSet(test['labels'], test['features'])
+        self.s_names = TrafficSignNames(sign_names_file)
 
     def print_info(self):
         print("Number of training examples =", self.train.length)
@@ -38,7 +33,7 @@ class TrafficSignsData:
 
     @property
     def sign_names(self):
-        return self.s_names_dict
+        return self.s_names.sign_names
 
     @property
     def train(self):
@@ -106,3 +101,19 @@ class DataSet:
     def reset(self):
         self.current_batch = [], []
         self.offset = 0
+
+
+class TrafficSignNames:
+
+    def __init__(self, csv_file_path="../traffic-signs-data/signnames.csv"):
+
+        with open(csv_file_path) as f:
+            self.s_names_dict = {}
+            read_csv = csv.reader(f, delimiter=",")
+            for index, row in enumerate(read_csv):
+                if index > 0:
+                    self.s_names_dict[int(row[0])] = row[1]
+
+    @property
+    def sign_names(self):
+        return self.s_names_dict
