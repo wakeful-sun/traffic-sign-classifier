@@ -34,7 +34,7 @@ with tf.Session() as session:
         total_accuracy = 0
         while dataset.move_next(BATCH_SIZE):
             labels, images = dataset.current
-            a_feed_dict = trainer.input.create_feed(labels, images, 1.0)
+            a_feed_dict = trainer.input.create_feed(labels, images)
 
             calculated_accuracy = session.run(trainer.accuracy, feed_dict=a_feed_dict)
             total_accuracy += (calculated_accuracy * len(images))
