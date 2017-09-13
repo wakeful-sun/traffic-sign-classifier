@@ -1,5 +1,6 @@
 import tensorflow as tf
 import time
+import os
 from nn_model_factory import *
 from traffic_signs_data import TrafficSignsData
 from nn_model_trainer import NnModelTrainer
@@ -17,7 +18,7 @@ data.print_info()
 
 trainer = NnModelTrainer([32, 32, 3], data.train.n_classes, learning_rate)
 
-tf.summary.scalar("cross_entropy_scl", trainer.cross_entropy)
+tf.summary.scalar("loss", trainer.loss)
 tf.summary.scalar("training_accuracy", trainer.accuracy)
 summarize_all = tf.summary.merge_all()
 
@@ -45,12 +46,19 @@ with tf.Session() as session:
     index = 0
     accuracy_calc_period = 10000
     threshold = accuracy_calc_period
+    validation_accuracy = 0
 
     for epoch in range(EPOCHS):
+        if validation_accuracy > 96:
+            break
+
         print("Epoch: ", epoch)
         data.train.shuffle()
 
         while data.train.move_next(BATCH_SIZE):
+            if validation_accuracy > 96:
+                break
+
             labels_batch, images_batch = data.train.current
             t_feed_dict = trainer.input.create_feed(labels_batch, images_batch, drop)
 
@@ -63,6 +71,7 @@ with tf.Session() as session:
 
             index += len(images_batch)
             tb_writer.add_summary(summary, index)
+
 
     final_accuracy = evaluate_accuracy(data.validation)
 
@@ -79,4 +88,4 @@ with open("{}_summary_{:.3f}.txt".format(tb_log_path, final_accuracy * 100), "w"
 
 print(final_accuracy_msg)
 print(spent_time_msg)
-print("Location is: ", tb_log_path)
+print("Location is: ", os.path.join(os.path.dirname(__file__), tb_log_path))

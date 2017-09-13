@@ -14,18 +14,18 @@ class NnModelTrainer:
             tf.summary.image("images", self.input.images_tensor, 5)
 
         t_preprocessed_images = tf.image.convert_image_dtype(self.input.images_tensor, dtype=tf.float32)
-        logits = NnModelFactory().create(t_preprocessed_images, self.input.keep_prob_tensor, n_classes)
+        self.t_logits = NnModelFactory().create(t_preprocessed_images, self.input.keep_prob_tensor, n_classes)
 
         with tf.name_scope("cross_entropy"):
-            self.t_softmax = tf.nn.softmax_cross_entropy_with_logits(labels=t_one_hot_labels, logits=logits)
-            self.t_cross_entropy = tf.reduce_mean(self.t_softmax)
+            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=t_one_hot_labels, logits=self.t_logits)
+            self.t_loss = tf.reduce_mean(cross_entropy)
 
         with tf.name_scope("accuracy"):
-            self.prediction_is_correct = tf.equal(tf.argmax(logits, 1), tf.argmax(t_one_hot_labels, 1))
-            self.t_accuracy = tf.reduce_mean(tf.cast(self.prediction_is_correct, tf.float32))
+            prediction_is_correct = tf.equal(tf.argmax(self.t_logits, 1), tf.argmax(t_one_hot_labels, 1))
+            self.t_accuracy = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
 
         with tf.name_scope("loss_optimizer"):
-            self.t_train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.t_cross_entropy)
+            self.t_train_step = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.t_loss)
 
     @property
     def input(self):
@@ -40,16 +40,12 @@ class NnModelTrainer:
         return self.t_train_step
 
     @property
-    def cross_entropy(self):
-        return self.t_cross_entropy
+    def loss(self):
+        return self.t_loss
 
     @property
-    def prediction(self):
-        return self.prediction_is_correct
-
-    @property
-    def softmax(self):
-        return self.t_softmax
+    def logits(self):
+        return self.t_logits
 
 
 class Placeholders:
