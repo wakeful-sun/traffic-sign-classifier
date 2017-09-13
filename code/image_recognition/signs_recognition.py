@@ -49,17 +49,25 @@ def load_image(file_path):
     return mpimg.imread(image_path)
 
 
-img = load_image("./test_signs/00001_00025.ppm")
-image = cv2.resize(img, (32,32))
+raw_image = load_image("./test_signs/00001_00025.ppm")
+resized_image = cv2.resize(raw_image, (32, 32))
 
 reader = SignReader()
-nn_output = reader.test(image)
-print(reader.sign_names)
-a = dict()
-for key, s_name in reader.sign_names.items():
-    a[s_name] = nn_output[key]
+nn_output = reader.test(resized_image)
 
-top_items = dict(sorted(a.items(), key=operator.itemgetter(1), reverse=True)[:5])
+sign_names_with_probabilities = [(s_name, nn_output[key]) for key, s_name in reader.sign_names.items()]
 
-for key, value in top_items.items():
-    print(key, ": ", round(value*100, 3))
+top_items = sorted(sign_names_with_probabilities, key=lambda x: x[1], reverse=True)[:5]
+
+probabilities = ["{}: {:.3f}".format(name, prob*100) for name, prob in top_items]
+print("\n".join(probabilities))
+
+
+def plot_image(image, caption="no caption"):
+    fig, ax = plt.subplots()
+    fig.suptitle(caption, fontweight="bold")
+    plt.imshow(image)
+    plt.show()
+
+
+plot_image(raw_image, probabilities[0])
