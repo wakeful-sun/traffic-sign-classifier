@@ -49,14 +49,14 @@ with tf.Session() as session:
     validation_accuracy = 0
 
     for epoch in range(EPOCHS):
-        if validation_accuracy > 96:
+        if validation_accuracy > 0.96:
             break
 
         print("Epoch: ", epoch)
         data.train.shuffle()
 
         while data.train.move_next(BATCH_SIZE):
-            if validation_accuracy > 96:
+            if validation_accuracy > 0.96:
                 break
 
             labels_batch, images_batch = data.train.current
@@ -72,19 +72,28 @@ with tf.Session() as session:
             index += len(images_batch)
             tb_writer.add_summary(summary, index)
 
-
     final_accuracy = evaluate_accuracy(data.validation)
-
     saver.save(session, model_path)
 
 elapsed = (time.time() - start_time)/60
 final_accuracy_msg = "*** final validation accuracy {:.3f}".format(final_accuracy * 100)
-spent_time_msg = "Total training time for {} samples: {:.2f}m".format(data.train.length * EPOCHS, elapsed)
+spent_time_msg = "Total training time for {} samples: {:.2f}m".format(index, elapsed)
+
+log_data = [
+    time.strftime("%X %x"),
+    "tensorflow version: " + tf.__version__,
+    "",
+    final_accuracy_msg,
+    "-" * 30,
+    spent_time_msg,
+    "Samples in batch: \t{}".format(data.train.length),
+    "Batches: \t\t\t{:.2f}".format(index/data.train.length),
+    "Training dropout: \t{}".format(drop),
+    "Learning rate \t\t{}".format(learning_rate)
+]
 
 with open("{}_summary_{:.3f}.txt".format(tb_log_path, final_accuracy * 100), "w") as f:
-    f.write(final_accuracy_msg)
-    f.write("\n")
-    f.write(spent_time_msg)
+    f.write("\n".join(log_data))
 
 print(final_accuracy_msg)
 print(spent_time_msg)
