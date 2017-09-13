@@ -1,0 +1,2 @@
+*** final validation accuracy 95.646
+Total training time for 3131910 samples: 8.86m
