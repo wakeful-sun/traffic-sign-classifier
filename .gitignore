@@ -11,4 +11,4 @@
 \__pycache__
 
 #tensorboard files and tained networks
-\tb_logs
+events.out.tfevents.*
