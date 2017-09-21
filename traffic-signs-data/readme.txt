@@ -1,1 +1,1 @@
-Please put traffic sign data set from traffic-sign-data.zip into this folder if training/testin is required.
+Please put traffic sign data set from traffic-sign-data.zip into this folder if new model training is required.
