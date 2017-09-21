@@ -7,15 +7,16 @@ from nn_model_trainer import NnModelTrainer
 
 
 images_shape = [32, 32, 3]
-model_path = "./model/model.ckpt"
+traffic_sign_names_path = "../../signnames.csv"
+data_folder_path = "../../traffic-signs-data/"
+trained_model_path = "../../tb_logs/E90_B200_R0.0001_D0.3_all-data/model.ckpt"
 
-data = TrafficSignsData("../../traffic-signs-data/")
+data = TrafficSignsData(data_folder_path, traffic_sign_names_path)
 
 n_classes = len(data.sign_names)
 print("Traffic sing classes: ", n_classes)
 trainer = NnModelTrainer(images_shape, n_classes)
 
-#tf.reset_default_graph()
 saver = tf.train.Saver()
 
 
@@ -23,7 +24,7 @@ def evaluate_accuracy_for(test_data):
     total_accuracy = 0
 
     with tf.Session() as session:
-        saver.restore(session, model_path)
+        saver.restore(session, trained_model_path)
 
         while test_data.move_next(200):
             labels, images = test_data.current
@@ -34,6 +35,9 @@ def evaluate_accuracy_for(test_data):
 
         return total_accuracy / test_data.length
 
+
+v_accuracy = evaluate_accuracy_for(data.train)
+print("Training accuracy is: {:.3f}%".format(v_accuracy*100))
 
 v_accuracy = evaluate_accuracy_for(data.validation)
 print("Validation accuracy is: {:.3f}%".format(v_accuracy*100))

@@ -49,16 +49,10 @@ with tf.Session() as session:
     validation_accuracy = 0
 
     for epoch in range(EPOCHS):
-        if validation_accuracy > 0.96:
-            break
-
         print("Epoch: ", epoch)
         data.train.shuffle()
 
         while data.train.move_next(BATCH_SIZE):
-            if validation_accuracy > 0.96:
-                break
-
             labels_batch, images_batch = data.train.current
             t_feed_dict = trainer.input.create_feed(labels_batch, images_batch, drop)
 
@@ -97,4 +91,4 @@ with open("{}_summary_{:.3f}.txt".format(tb_log_path, final_accuracy * 100), "w"
 
 print(final_accuracy_msg)
 print(spent_time_msg)
-print("Location is: ", os.path.join(os.path.dirname(__file__), tb_log_path))
+print("Location is: ", os.path.normpath(os.path.join(os.path.dirname(__file__), tb_log_path)))

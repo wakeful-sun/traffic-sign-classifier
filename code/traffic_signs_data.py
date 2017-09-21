@@ -6,11 +6,10 @@ import os
 
 class TrafficSignsData:
 
-    def __init__(self, data_folder_path="../traffic-signs-data/"):
+    def __init__(self, data_folder_path="../traffic-signs-data/", sign_names_file="../signnames.csv"):
         training_file = os.path.join(data_folder_path, "train.p")
         validation_file = os.path.join(data_folder_path, "valid.p")
         testing_file = os.path.join(data_folder_path, "test.p")
-        sign_names_file = os.path.join(data_folder_path, "signnames.csv")
 
         with open(training_file, mode='rb') as f:
             train = pickle.load(f)
@@ -105,7 +104,7 @@ class DataSet:
 
 class TrafficSignNames:
 
-    def __init__(self, csv_file_path="../traffic-signs-data/signnames.csv"):
+    def __init__(self, csv_file_path="./signnames.csv"):
 
         with open(csv_file_path) as f:
             self.s_names_dict = {}
