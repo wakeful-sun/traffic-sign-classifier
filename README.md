@@ -1,10 +1,16 @@
 # traffic-sign-classifier
 
-Project uses Git Large File Storage (LFS). Next tool installation is required before cloning: https://git-lfs.github.com/
-
 **Traffic Sign Recognition** 
 
-This project covers basics of neural networks and convolutional neural networks and implements traffic signs classification. Project uses prepared [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset) data set for training and raw images for validation to check if model can classify traffic sign images correctly.
+This project implements traffic signs classification with help of convolutional neural network. Project uses prepared [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset) data set for training and raw images for validation to check if model can classify traffic sign images correctly.
+
+> **Note:** training data set is not included. Please put traffic sign data set from traffic-sign-data.zip into `traffic-sign-data` folder if new model training is required.
+
+Repository contains Python code, Jupyter Notebook file with whole program description and it's html printout, trained neural network and `signnames.csv` file with classes, which network can recognize. 
+
+> **Note:** supplied neural network is trained on TensorFlow version 1.3.0 and it is unlikely to work on TensorFlow with lower version.
+
+`code\image_recognition\signs_recognition.py` file allows custom input image classification. It provides only basic functionaliny. And it will not work correctly with any input.
 
 ---
 
@@ -36,12 +42,10 @@ The goals / steps of this project are the following:
 [image13]: ./test_signs/invalid_data.jpg "Not Traffic Sign"
 [image14]: ./images/random_traffic_sign.png "Random traffic sign"
 
-Here is a link to my [project code](https://github.com/wakeful-sun/traffic-sign-classifier) on github
-
 ---
 **Data Set Summary & Exploration**
 
-####1. The basic summary of the data set.
+<h6>1. The basic summary of the data set.</h6>
 
 I used native python functionality to calculate summary statistics of the traffic
 signs data set:
@@ -52,7 +56,7 @@ signs data set:
 * The shape of a traffic sign image is 32x32x3
 * The number of unique classes/labels in the data set is 43
 
-####2. Exploratory visualization of the dataset.
+<h6>2. Exploratory visualization of the dataset.</h6>
 
 It is a bar chart showing how many samples we have for each traffic sign class
 
@@ -69,7 +73,7 @@ Here is a random traffic sigh
 ---
 **Design and Test a Model Architecture**
 
-####1. Training data preprocessing
+<h6>1. Training data preprocessing</h6>
 
 Next data preprocessing steps are used in current solution:
  - data is shuffled before each epoch
@@ -81,7 +85,7 @@ I have also tried suggested normalization `(color_channel - 128) / 128` and diff
 
 Number of examples for different sign type in training set varies from 180 to 2010 images. I have assumed normalized training set to have better results, but this assumption was wrong. Accuracy on full set with low dropout grows faster and it more stable with increasing epochs amount.
 
-####2. Neural network structure
+<h6>2. Neural network structure</h6>
 
 For this work I'm using the LeNet-5 implementation with the next structure:
 
@@ -111,7 +115,7 @@ Here is a graph of my neural network:
 
 ![alt text][image4]
 
-####3. Model training
+<h6>3. Model training</h6>
 
 My model has 3 input parameters: images, corresponding labels and `keep_prob` parameter for dropout. 
 
@@ -159,7 +163,7 @@ Validation accuracy/processed images dependency:
 
 ![alt text][image7]
 
-####4. Approach taken for finding a solution
+<h6>4. Approach taken for finding a solution</h6>
 
 My final model results were:
 * training set accuracy of 99.997%
@@ -170,9 +174,8 @@ I'm using well known neural network architecture - [**LeNet**](http://yann.lecun
 
 Model's accuracy on training, validation and test set is more then 94%. It would be nice to find out which images from testing and validation sets misrecognized. It might give a clue for model improvement. I've seen validation set accuracy measurement result higher than 96% during model training. So, I think test accuracy might be improved as well.
 
-###Test a Model on New Images
-
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+---
+**Test a Model on New Images**
 
 Here are five German traffic signs that I found on the web:
 
@@ -186,7 +189,7 @@ And one non traffic sign image:
 
 <img src="./test_signs/invalid_data.jpg" width="100" heigth="100">
 
-####2. The model's predictions
+<h6>1. The model's predictions</h6>
 
 Here are the results of the prediction:
 
@@ -202,11 +205,11 @@ Here are the results of the prediction:
 
 The model was able to correctly guess 5 of the 5 traffic signs taken from **German Traffic Sign Benchmarks** *([`GTSRB_Final_Test_Images`](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset#Downloads))*, which gives an accuracy of 100%.
 
-####3. Final testing traffic sign probabilities
+<h6>2. Final testing traffic sign probabilities</h6>
 
 The code for making predictions on my final model is located in very last cell of the jupyter notebook.
 
-1. The model is absolutely sure that this is a **double curve** (probability of 0.99), and the image does contain a double curve. The top five soft max probabilities were:
+1. The model is absolutely sure that this is a *double curve* (probability of 0.99), and the image does contain a double curve. The top five soft max probabilities were:
 
     <img src="./test_signs/00080.jpg" width="100" heigth="100" alt="Double curve">
 
@@ -218,7 +221,7 @@ The code for making predictions on my final model is located in very last cell o
     | 0.000000 	            | Right-of-way at the next intersection         |
     | 0.000000 	            | Road narrows on the right                     |
 
-2. **General caution** (probability of 0.92)
+2. *General caution* (probability of 0.92)
 
     <img src="./test_signs/00233.jpg" width="100" heigth="100" alt="Double curve">
 
@@ -231,7 +234,7 @@ The code for making predictions on my final model is located in very last cell o
     | 0.382782 	            | Traffic signals                               |
 
 
-3. **No passing for vehicles over 3.5 metric tons** (probability of 0.99)
+3. *No passing for vehicles over 3.5 metric tons* (probability of 0.99)
 
     <img src="./test_signs/01190.jpg" width="100" heigth="100" alt="No passing for vehicles over 3.5 metric tons">
 
@@ -243,7 +246,7 @@ The code for making predictions on my final model is located in very last cell o
     | 0.000001 	            | No passing                                    |
     | 0.000001 	            | Vehicles over 3.5 metric tons prohibited      |
 
-4. **Priority road** (probability of 0.54)
+4. *Priority road* (probability of 0.54)
 
     <img src="./test_signs/10359.jpg" width="100" heigth="100" alt="Priority road">
 
@@ -255,7 +258,7 @@ The code for making predictions on my final model is located in very last cell o
     | 2.074297 	            | Roundabout mandatory                          |
     | 1.033213 	            | Yield                                         |
 
-5. **Speed limit (70km/h)** (probability of 0.99)
+5. *Speed limit (70km/h)* (probability of 0.99)
 
     <img src="./test_signs/11944.jpg" width="100" heigth="100" alt="Speed limit (70km/h)">
 
@@ -267,7 +270,7 @@ The code for making predictions on my final model is located in very last cell o
     | 0.015735 	            | Speed limit (100km/h)                         |
     | 0.008550 	            | Speed limit (30km/h)                          |
 
-6. **Non traffic sing** misrecognized as priority road sign with probability 0.57 
+6. *Non traffic sing* misrecognized as priority road sign with probability 0.57 
 
     <img src="./test_signs/invalid_data.jpg" width="100" heigth="100" alt="Speed limit (70km/h)">
 
@@ -278,9 +281,3 @@ The code for making predictions on my final model is located in very last cell o
     | 7.705513 	            | End of speed limit (80km/h)                   |
     | 3.749631 	            | Wild animals crossing                         |
     | 0.649604 	            | Speed limit (60km/h)                          |
-
----
-
-**Summary**
-
-This project gave me good understanding of how neural networks work and what they can be used for. Also I earned some knowledge about different neural network architectures and some new terminology. I got acquainted with TensorFlow framework, managed to configure my PC to run neural network operations on GPU. And finally I finished traffic sign classifier project. I understand that this project not going to survive real environment challenges, but it might be a good point to start from.
