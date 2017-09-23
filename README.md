@@ -4,6 +4,8 @@
 
 This project implements traffic signs classification with help of convolutional neural network. Project uses prepared [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset) data set for training and raw images for validation to check if model can classify traffic sign images correctly.
 
+> **Note:** the repository uses Git Large File Storage (LFS) storing training, testing and validation data sets. Next tool installation is required for cloning serialized images: https://git-lfs.github.com/
+
 Repository contains Python code, Jupyter Notebook file with whole program description and it's html printout, trained neural network and `signnames.csv` file with classes, which network can recognize. 
 
 > **Note:** supplied neural network is trained on TensorFlow version 1.3.0 and it is unlikely to work on TensorFlow with lower version.
