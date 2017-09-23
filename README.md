@@ -4,8 +4,6 @@
 
 This project implements traffic signs classification with help of convolutional neural network. Project uses prepared [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset) data set for training and raw images for validation to check if model can classify traffic sign images correctly.
 
-> **Note:** training data set is not included. Please put traffic sign data set from traffic-sign-data.zip into `traffic-sign-data` folder if new model training is required.
-
 Repository contains Python code, Jupyter Notebook file with whole program description and it's html printout, trained neural network and `signnames.csv` file with classes, which network can recognize. 
 
 > **Note:** supplied neural network is trained on TensorFlow version 1.3.0 and it is unlikely to work on TensorFlow with lower version.
@@ -146,7 +144,7 @@ At this moment model trainer uses next hyperparameters:
     BATCH_SIZE = 200
     # keep_prob parameter for dropout tensor
     drop = 0.3
-    # folder to save model, TensorBoard training summary and text summary
+    # folder to save trained model, TensorBoard training summary and text summary
     tb_log_path = "./tb_logs/E{}_B{}_R{}_D{}_all-data/".format(EPOCHS, BATCH_SIZE, learning_rate, drop)
     # training checkpoint name
     model_path = tb_log_path + "model.ckpt"
